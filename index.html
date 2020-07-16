@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>My Navigation</title>
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+	<header></header>
+	<main>
+		<div class="wrapper" id='main'>
+
+		</div>
+	</main>
+	<footer></footer>
+	<script type="text/javascript">
+		//1、初始化数据
+		//取出local storage 中storage1 中的东西
+        var hashA = init();
+        var keys = hashA['keys'];
+        var hash = hashA['hash'];
+
+		//2、生成键盘
+		generateKeyBoard(keys,hash);
+
+
+		//3、监听键盘
+        listenToUser(hash);
+
+
+        //下面是私有代码
+
+        //从local storage获取数据
+        function getFromLocalStorage(StorageName)
+        {
+            return JSON.parse(localStorage.getItem('StorageName')||'null');
+        }
+        
+        /*function tagCreate(tagName,attributes) {
+			var element = document.createElement(tagName);
+			for (var key in attributes)//key为ID、 className、 textCotent 
+			{
+			    element[key] = attributes;
+			}
+		    return element;
+        }*/
+
+        /*function  createTag(tag1,textContent,className) {
+            var tagN = tag(tag1);
+            tagN.textContent = textContent;
+            tagN.className = className;
+        }
+        */
+        
+        function tag(tagName)
+		{
+		    return document.createElement(tagName);
+		}
+
+		function createSpan(textContent)
+		{
+            var span = tag(span);
+            span.textContent = textContent;
+            span.className = 'text';
+            return span;
+        }
+
+
+        function createButton(id)
+		{
+            var button = tag('button');
+            button.textContent = 'Edit';
+            button.id = id;
+            button.onclick = function (abc)
+			{
+                var button2 = abc['target'];
+                var img2 = button2.previousElementSibling;
+                var key1 = button2['id'];
+                var x = prompt('Please enter a new website');
+                hash[key1] = x;  //hash变更
+                img2.src = 'http://' + x + '/favicon.ico';
+                img2.onerror = function (xxx) {
+                    xxx.target.src = '//i.loli.net/2020/07/16/EhMAlcy4efVYujq.png';
+                };
+                localStorage.setItem('test1', JSON.stringify(hash));
+            };
+            return button;
+		}
+
+		//hash[row[index2]]
+		function createImg(domain){
+            var img = tag('img');
+            if (domain) {
+                img.src = 'http://' + domain + '/favicon.ico';
+            }
+            else {
+                img.src = '//i.loli.net/2020/07/16/EhMAlcy4efVYujq.png';
+            }
+            img.onerror = function (xxx) {
+                console.log('download fail');
+                xxx.target.src = '//i.loli.net/2020/07/16/EhMAlcy4efVYujq.png';
+            };
+            return img;
+		}
+
+        function init() {
+            var keys={
+                0:{0:'q',1:'w',2:'e',3:'r',4:'t',5:'y',6:'u',7:'i',8:'o',9:'p',length:10},
+                1:{0:'a',1:'s',2:'d',3:'f',4:'g',5:'h',6:'j',7:'k',8:'l',length:9},
+                2:{0:'z',1:'x',2:'c',3:'v',4:'b',5:'n',6:'m',length:7},
+                length: 3
+            };
+            var hash = {
+                q: undefined,
+                w: 'weibo.com',
+                e: 'ele.me',
+                r: 'renren.com',
+                t: 'tecent.com',
+                y: 'youtube.com',
+                u: 'uc.cn',
+                i: 'iqiyi.com',
+                o: 'opera.com',
+                p: undefined,
+                a: 'acfun.cn',
+                s: 'souhu.com',
+                z: 'zhihu.com',
+                m: 'www.mcdonalds.com.cn'
+            };
+            var hashInLocalStorage = getFromLocalStorage('test1');
+            if(hashInLocalStorage)
+            {
+                hash = hashInLocalStorage;
+            }
+
+            return {
+                'keys': keys,
+                'hash': hash
+            };
+        }
+
+        function generateKeyBoard(keys,hash) {
+            for(var index = 0; index < keys['length']; index = index + 1)
+            {
+                var div = tag('div');
+                div.className='row';
+                main.appendChild(div);
+                var row = keys[index];  //第一个数组 第二个数组 第三个数组
+                for(var index2 = 0; index2< row['length']; index2 = index2 + 1) {
+                    var span = createSpan(row[index2]);
+                    var button = createButton(row[index2]);
+                    var img = createImg(hash[row[index2]]);
+                    var kbd = tag('kbd');
+                    kbd.className = 'key';
+                    kbd.appendChild(span);
+                    kbd.appendChild(button);
+                    kbd.appendChild(img);
+                    div.appendChild(kbd);
+                }
+            }
+        }
+
+        function listenToUser(hash) {
+            document.onkeypress=function(click1){
+                var key = click1['key'];
+                var website = hash[key];
+                //location.href = 'http://'+website;
+                window.open('http://'+website,'_blank');
+            };
+        }
+
+	</script>
+</body>
+</html>
